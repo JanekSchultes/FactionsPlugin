@@ -42,7 +42,7 @@ sponge {
     }
 }
 
-val javaTarget = 16 // Sponge targets a minimum of Java 16
+val javaTarget = 8 // Sponge targets a minimum of Java 16
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(javaTarget))
 }
