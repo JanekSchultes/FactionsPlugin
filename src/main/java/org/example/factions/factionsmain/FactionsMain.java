@@ -74,7 +74,8 @@ public class FactionsMain {
                 .criterion(crit)
                 .root()
                 .background(ResourceKey.minecraft("textures/gui/advancements/backgrounds/stone.png"))
-                .key(ResourceKey.of(this.container, "root"))
+                //.key(ResourceKey.of(this.container, "root"))
+                .key(key)
                 .build();
         event.register(adv);
     }
