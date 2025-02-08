@@ -1,18 +1,29 @@
 package org.example.factions.factionsmain;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.Logger;
 import org.example.factions.factionsmain.commands.CommandBuilder;
 import org.example.factions.factionsmain.factions.FactionContainer;
+import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.advancement.*;
+import org.spongepowered.api.advancement.criteria.AdvancementCriterion;
 import org.spongepowered.api.command.Command;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
-import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
-import org.spongepowered.api.event.lifecycle.StartingEngineEvent;
-import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
+import org.spongepowered.api.event.advancement.AdvancementTreeEvent;
+import org.spongepowered.api.event.lifecycle.*;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.math.vector.Vector2d;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * The main class of your Sponge plugin.
@@ -43,6 +54,29 @@ public class FactionsMain {
         // using the integrated (singleplayer) server.
         logger.info("Hello world from the factions plugin!");
         FactionContainer.loadFactions();
+    }
+
+    @Listener
+    public void onAdvancementGenerate(final RegisterDataPackValueEvent<Advancement> event) {
+        ItemStack stoneSword = ItemStack.builder().itemType(ItemTypes.STONE_SWORD).build();
+        DisplayInfo adv_info = DisplayInfo.builder()
+                .announceToChat(true)
+                .description(Component.text("Enter a faction"))
+                .hidden(false)
+                .icon(stoneSword)
+                .showToast(true)
+                .title(Component.text("Faction Hopper"))
+                .type(AdvancementTypes.GOAL).build();
+        AdvancementCriterion crit = AdvancementCriterion.dummy();
+        ResourceKey key = ResourceKey.builder().value("entry").namespace("factions").build();
+        Advancement adv = Advancement.builder()
+                .displayInfo(adv_info)
+                .criterion(crit)
+                .root()
+                .background(ResourceKey.minecraft("textures/gui/advancements/backgrounds/stone.png"))
+                .key(ResourceKey.of(this.container, "root"))
+                .build();
+        event.register(adv);
     }
 
     @Listener
